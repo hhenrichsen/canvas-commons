@@ -1,0 +1,30 @@
+name: Checks
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+    branches-ignore:
+      - 'nobuild**'
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  UnitTests:
+    name: 'Tests and Builds'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - name: Install
+        run: |
+          npm ci
+      - name: Build Succeeds
+        run: |
+          npm run build
+      - name: Format Check
+        run: |
+          npm run lint
