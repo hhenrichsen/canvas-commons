@@ -9,6 +9,7 @@ import {
   PossibleCanvasStyle,
   CanvasStyleSignal,
   canvasStyleSignal,
+  nodeName,
 } from '@motion-canvas/2d';
 import {Reference, SignalValue} from '@motion-canvas/core';
 import {Colors} from '../Colors';
@@ -28,6 +29,7 @@ export interface WindowProps extends ScrollableProps {
   scrollable?: Reference<Scrollable>;
 }
 
+@nodeName('Window')
 export class Window extends Rect {
   public declare readonly title: SignalValue<string>;
 
@@ -139,6 +141,7 @@ export class Window extends Rect {
                 size={30}
                 fill={Colors.Tailwind.Slate['400']}
                 stroke={'white'}
+                marginRight={2}
                 lineWidth={2}
                 shadowColor={Colors.Tailwind.Slate['950']}
                 shadowOffset={2}
@@ -164,7 +167,7 @@ export class Window extends Rect {
                 <Icon
                   size={25}
                   color="black"
-                  icon={'material-symbols:maximize'}
+                  icon={'material-symbols:chrome-maximize-outline-sharp'}
                 />
               </Rect>
               <Rect

@@ -10,22 +10,22 @@ import {
 
 export function* loopSlide(
   name: string,
-  setup: () => ThreadGenerator,
+  setup: undefined | (() => ThreadGenerator),
   frame: (() => ThreadGenerator) | LoopCallback,
-  cleanup: () => ThreadGenerator,
+  cleanup: undefined | (() => ThreadGenerator),
 ): ThreadGenerator {
   if (usePlayback().state !== PlaybackState.Presenting) {
-    yield* setup();
+    if (setup) yield* setup();
     // Run the loop once if it's in preview mode
     // @ts-ignore
     yield* frame(0);
     yield* beginSlide(name);
-    yield* cleanup();
+    if (cleanup) yield* cleanup();
     return;
   }
-  yield* setup();
+  if (setup) yield* setup();
   const task = yield loop(Infinity, frame);
   yield* beginSlide(name);
-  yield* cleanup();
+  if (cleanup) yield* cleanup();
   cancel(task);
 }

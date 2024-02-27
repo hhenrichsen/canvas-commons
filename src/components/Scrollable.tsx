@@ -6,6 +6,7 @@ import {
   computed,
   vector2Signal,
   initial,
+  nodeName,
 } from '@motion-canvas/2d';
 import {
   InterpolationFunction,
@@ -29,6 +30,7 @@ export interface ScrollableProps extends RectProps {
   inactiveOpacity?: SignalValue<number>;
 }
 
+@nodeName('Scrollable')
 export class Scrollable extends Rect {
   public declare readonly orientation: ScrollableOrientation;
 
@@ -71,7 +73,7 @@ export class Scrollable extends Rect {
   @vector2Signal('inactiveOpacity')
   public declare readonly inactiveOpacity: Vector2Signal<number>;
 
-  private readonly scrollOpacity = Vector2.createSignal(0.5);
+  private readonly scrollOpacity = Vector2.createSignal();
 
   @computed()
   private scrollOpacityY() {
@@ -99,6 +101,7 @@ export class Scrollable extends Rect {
 
   public constructor(props: ScrollableProps) {
     super({...props, clip: true});
+    this.scrollOpacity(this.inactiveOpacity);
 
     this.add(
       <Layout layout={false}>
