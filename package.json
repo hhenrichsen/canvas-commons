@@ -35,7 +35,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
-    "@typescript-eslint/parser": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-tsdoc": "^0.2.17",
