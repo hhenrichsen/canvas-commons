@@ -1,7 +1,8 @@
 {
   "name": "@hhenrichsen/canvas-commons",
-  "private": true,
-  "version": "0.0.0",
+  "description": "Common utilities for working with Motion Canvas",
+  "repository": "https://github.com/hhenrichsen/canvas-commons",
+  "version": "0.1.0",
   "scripts": {
     "prepare": "husky install",
     "build:dev": "rollup -c rollup.config.mjs",

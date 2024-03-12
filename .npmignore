@@ -1,0 +1,10 @@
+.github
+.husky
+.editorconfig
+.eslintignore
+.eslintrc.json
+.prettierignore
+.prettierrc
+tsconfig.json
+vite.config.ts
+test
