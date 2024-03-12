@@ -38,8 +38,6 @@ export interface FileTreeProps extends RectProps {
   fileColor?: SignalValue<PossibleColor>;
   assetColor?: SignalValue<PossibleColor>;
   labelColor?: SignalValue<PossibleColor>;
-  lineColor?: SignalValue<PossibleColor>;
-  lineRadius?: SignalValue<number>;
   indentAmount?: SignalValue<number>;
   rowSize?: SignalValue<number>;
 }
@@ -62,14 +60,6 @@ export class FileTree extends Rect {
   @initial(Colors.Tailwind.Slate['100'])
   @colorSignal()
   public declare readonly labelColor: ColorSignal<this>;
-
-  @initial(Colors.Tailwind.Slate['100'])
-  @colorSignal()
-  public declare readonly lineColor: ColorSignal<this>;
-
-  @initial(5)
-  @signal()
-  public declare readonly lineRadius: SimpleSignal<number, this>;
 
   @initial(40)
   @signal()
