@@ -7,7 +7,8 @@ import {
   Vector2,
   unwrap,
 } from '@motion-canvas/core';
-import {Colors, Window, WindowProps, WindowStyle} from '..';
+import {Window, WindowProps, WindowStyle} from './Window';
+import {Colors} from '../Colors';
 
 export const ImgWindow = (
   props: Omit<WindowProps, 'size'> & {

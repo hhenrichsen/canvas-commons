@@ -1,3 +1,16 @@
-node_modules/
-lib/
-dist/
+# Generated files
+node_modules
+output
+dist
+lib
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

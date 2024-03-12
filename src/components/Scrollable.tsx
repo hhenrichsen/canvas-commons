@@ -28,6 +28,7 @@ export enum ScrollableOrientation {
 export interface ScrollableProps extends RectProps {
   orientation?: ScrollableOrientation;
   inactiveOpacity?: SignalValue<number>;
+  scrollOffset?: SignalValue<PossibleVector2>;
 }
 
 @nodeName('Scrollable')

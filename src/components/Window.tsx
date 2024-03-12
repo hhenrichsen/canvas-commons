@@ -10,10 +10,13 @@ import {
   CanvasStyleSignal,
   canvasStyleSignal,
   nodeName,
+  View2D,
 } from '@motion-canvas/2d';
-import {Reference, SignalValue} from '@motion-canvas/core';
+import {PossibleVector2, Reference, SignalValue} from '@motion-canvas/core';
 import {Colors} from '../Colors';
 import {Scrollable, ScrollableProps} from './Scrollable';
+import {belowScreenPosition} from '../Util';
+import {Windows98Button} from './WindowsButton';
 
 export enum WindowStyle {
   MacOS,
@@ -27,6 +30,7 @@ export interface WindowProps extends ScrollableProps {
   bodyColor?: SignalValue<PossibleCanvasStyle>;
   windowStyle?: WindowStyle;
   scrollable?: Reference<Scrollable>;
+  scrollOffset?: SignalValue<PossibleVector2>;
 }
 
 @nodeName('Window')
@@ -77,13 +81,9 @@ export class Window extends Rect {
         fill={Colors.Tailwind.Slate['800']}
         radius={this.windowStyle === WindowStyle.MacOS ? 16 : 0}
         size={this.size}
-        shadowColor={
-          this.windowStyle == WindowStyle.MacOS
-            ? Colors.Tailwind.Slate['950']
-            : undefined
-        }
-        shadowOffset={{x: 4, y: 4}}
-        shadowBlur={8}
+        shadowColor={Colors.Tailwind.Slate['950'] + '80'}
+        shadowOffset={this.windowStyle == WindowStyle.MacOS ? 4 : 20}
+        shadowBlur={this.windowStyle == WindowStyle.MacOS ? 8 : 0}
         padding={this.windowStyle == WindowStyle.Windows98 ? 8 : 0}
         stroke={this.windowStyle == WindowStyle.MacOS ? undefined : 'white'}
         lineWidth={2}
@@ -92,6 +92,7 @@ export class Window extends Rect {
           ref={props.scrollable}
           orientation={props.orientation}
           inactiveOpacity={props.inactiveOpacity}
+          scrollOffset={props.scrollOffset}
           padding={10}
           size={() =>
             this.size()
@@ -134,59 +135,41 @@ export class Window extends Rect {
           ) : null}
           {this.windowStyle == WindowStyle.Windows98 ? (
             <Rect>
-              <Rect
-                layout
-                alignItems={'center'}
-                justifyContent={'center'}
-                size={30}
-                fill={Colors.Tailwind.Slate['400']}
-                stroke={'white'}
-                marginRight={2}
-                lineWidth={2}
-                shadowColor={Colors.Tailwind.Slate['950']}
-                shadowOffset={2}
-              >
+              <Windows98Button borderSize={2}>
                 <Icon
-                  size={25}
+                  size={24}
                   color="black"
                   icon={'material-symbols:minimize'}
                 />
-              </Rect>
-              <Rect
-                layout
-                alignItems={'center'}
-                justifyContent={'center'}
-                size={30}
-                fill={Colors.Tailwind.Slate['400']}
-                marginRight={10}
-                stroke={'white'}
-                lineWidth={2}
-                shadowColor={Colors.Tailwind.Slate['950']}
-                shadowOffset={2}
-              >
+              </Windows98Button>
+              <Windows98Button borderSize={2} marginRight={10}>
                 <Icon
-                  size={25}
+                  size={24}
                   color="black"
                   icon={'material-symbols:chrome-maximize-outline-sharp'}
                 />
-              </Rect>
-              <Rect
-                layout
-                alignItems={'center'}
-                justifyContent={'center'}
-                size={30}
-                fill={Colors.Tailwind.Slate['400']}
-                stroke={'white'}
-                lineWidth={2}
-                shadowColor={Colors.Tailwind.Slate['950']}
-                shadowOffset={2}
-              >
-                <Icon size={25} color="black" icon={'material-symbols:close'} />
-              </Rect>
+              </Windows98Button>
+              <Windows98Button borderSize={2}>
+                <Icon size={24} color="black" icon={'material-symbols:close'} />
+              </Windows98Button>
             </Rect>
           ) : null}
         </Rect>
       </Rect>,
     );
+  }
+
+  public *close(view: View2D, duration: number) {
+    yield this.scale(0, duration);
+    yield* this.position(belowScreenPosition(view, this), duration);
+  }
+
+  public *open(view: View2D, duration: number) {
+    const oldPosition = this.position();
+    const oldScale = this.scale();
+    this.position(belowScreenPosition(view, this));
+    this.scale(0);
+    yield this.scale(oldScale, duration);
+    yield* this.position(oldPosition, duration);
   }
 }

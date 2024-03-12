@@ -1,7 +1,7 @@
 {
-  "name": "@hhenrichsen/canvas-commons",
+  "name": "mc-cl-template-v2",
+  "private": true,
   "version": "0.0.0",
-  "description": "",
   "scripts": {
     "prepare": "husky install",
     "build:dev": "rollup -c rollup.config.mjs",
@@ -17,15 +17,9 @@
     "prettier:fix": "prettier --write .",
     "serve": "vite"
   },
-  "unpkg": "lib/bundle.js",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "keywords": [
-    "motion-canvas"
-  ],
-  "author": "",
-  "homepage": "",
-  "peerDependencies": {
+  "dependencies": {
+    "@codemirror/language": "^6.10.1",
+    "@lezer/highlight": "^1.2.0",
     "@motion-canvas/2d": "^3.14.2",
     "@motion-canvas/core": "^3.14.1"
   },
@@ -34,8 +28,8 @@
     "@motion-canvas/vite-plugin": "^3.14.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-tsdoc": "^0.2.17",
@@ -43,11 +37,11 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "rollup": "^4.12.0",
+    "rollup": "^4.13.0",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-node-externals": "^7.0.1",
     "tslib": "^2.6.2",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.2",
     "vite": "^4.0.0",
     "vite-tsconfig-paths": "^4.3.1"
   },
