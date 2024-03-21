@@ -1,6 +1,6 @@
 import {makeScene2D} from '@motion-canvas/2d/lib/scenes';
 import {waitFor} from '@motion-canvas/core/lib/flow';
-import {Gradient, Icon, Rect} from '@motion-canvas/2d';
+import {Gradient, Icon, Knot, Rect, Spline} from '@motion-canvas/2d';
 import {createRef} from '@motion-canvas/core';
 import {Windows98Button} from '@components/WindowsButton';
 import {Scrollable} from '@components/Scrollable';
@@ -10,6 +10,7 @@ import {Colors} from '@Colors';
 export default makeScene2D(function* (view) {
   const scrollable = createRef<Scrollable>();
   const r = createRef<Rect>();
+  const spl = createRef<Spline>();
   view.add(
     <>
       <Window
@@ -64,6 +65,12 @@ export default makeScene2D(function* (view) {
           fill={Colors.Tailwind.Amber['600']}
           radius={5}
         ></Rect>
+        <Spline ref={spl}>
+          <Knot position={[500, 0]}></Knot>
+          <Knot position={[0, 500]}></Knot>
+          <Knot position={[-500, 0]}></Knot>
+          <Knot position={[0, -500]}></Knot>
+        </Spline>
       </Window>
       <Windows98Button borderSize={8} position={[300, 0]}>
         <Icon
@@ -102,4 +109,6 @@ export default makeScene2D(function* (view) {
   yield* scrollable().scrollToBottomRight(1);
   yield* waitFor(1);
   yield* scrollable().scrollToBottomLeft(1);
+
+  yield* scrollable().followCurve(spl(), 5);
 });

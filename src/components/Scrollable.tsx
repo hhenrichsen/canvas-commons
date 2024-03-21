@@ -8,21 +8,24 @@ import {
   initial,
   nodeName,
   signal,
+  Curve,
 } from '@motion-canvas/2d';
 import {
   BBox,
   InterpolationFunction,
   PossibleVector2,
+  Reference,
   SignalValue,
   SimpleSignal,
   TimingFunction,
   Vector2,
   Vector2Signal,
   createRef,
+  createSignal,
   waitFor,
 } from '@motion-canvas/core';
 import {Colors} from '../Colors';
-import {clampRemap, signum} from '@Util';
+import {clampRemap, deref, signum} from '@Util';
 
 export interface ScrollableProps extends RectProps {
   activeOpacity?: SignalValue<number>;
@@ -531,5 +534,37 @@ export class Scrollable extends Rect {
       timingFunction,
       interpolationFunction,
     );
+  }
+
+  public *tweenToAndFollowCurve(
+    curve: Curve | Reference<Curve>,
+    navigationDuration: number,
+    duration: number,
+    timingFunction?: TimingFunction,
+    interpolationFunction?: InterpolationFunction<number>,
+  ) {
+    const c = deref(curve);
+    yield* this.scrollOffset(
+      () => c.getPointAtPercentage(0).position,
+      navigationDuration,
+    );
+    yield* this.followCurve(
+      curve,
+      duration,
+      timingFunction,
+      interpolationFunction,
+    );
+  }
+
+  public *followCurve(
+    curve: Curve | Reference<Curve>,
+    duration: number,
+    timingFunction?: TimingFunction,
+    interpolationFunction?: InterpolationFunction<number>,
+  ) {
+    const c = deref(curve);
+    const p = createSignal(0);
+    this.scrollOffset(() => c.getPointAtPercentage(p()).position);
+    yield* p(1, duration, timingFunction, interpolationFunction);
   }
 }

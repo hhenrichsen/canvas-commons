@@ -1,4 +1,4 @@
-import {Layout, View2D} from '@motion-canvas/2d';
+import {Layout, View2D, Node} from '@motion-canvas/2d';
 import {
   Reference,
   SimpleSignal,
@@ -53,4 +53,8 @@ export function clampRemap(
 
 export function signum(value: number): number {
   return value > 0 ? 1 : value < 0 ? -1 : 0;
+}
+
+export function deref<T extends Node>(ref: T | Reference<T>): T {
+  return typeof ref == 'function' ? ref() : ref;
 }
