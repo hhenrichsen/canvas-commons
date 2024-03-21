@@ -26,3 +26,31 @@ export function signalRef<T>(): {ref: Reference<T>; signal: SimpleSignal<T>} {
   // @ts-ignore
   return {ref: s, signal: s};
 }
+
+export function remap(
+  fromIn: number,
+  toIn: number,
+  fromOut: number,
+  toOut: number,
+  value: number,
+): number {
+  return fromOut + (toOut - fromOut) * ((value - fromIn) / (toIn - fromIn));
+}
+
+export function clamp(min: number, max: number, value: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+export function clampRemap(
+  fromIn: number,
+  toIn: number,
+  fromOut: number,
+  toOut: number,
+  value: number,
+): number {
+  return clamp(fromOut, toOut, remap(fromIn, toIn, fromOut, toOut, value));
+}
+
+export function signum(value: number): number {
+  return value > 0 ? 1 : value < 0 ? -1 : 0;
+}

@@ -90,10 +90,11 @@ export class Window extends Rect {
       >
         <Scrollable
           ref={props.scrollable}
-          orientation={props.orientation}
           inactiveOpacity={props.inactiveOpacity}
           scrollOffset={props.scrollOffset}
-          padding={10}
+          scrollPadding={props.scrollPadding}
+          handleWidth={props.handleWidth}
+          handleInset={props.handleInset}
           size={() =>
             this.size()
               .addY(-50)

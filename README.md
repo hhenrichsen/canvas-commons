@@ -20,6 +20,56 @@ donate on [Ko-fi](https://ko-fi.com/hhenrichsen).
 
 ## Components
 
+### Scrollable
+
+The `Scrollable` node is a custom component designed to allow for scrolling
+within a container. Its size represents the viewports size, and it can be
+scrolled to any position within its content.
+
+#### Props
+
+- `activeOpacity` - the opacity of the scrollbars when they are active
+- `handleInset` - the amount to inset the scrollbar handles
+- `handleProps` - the props to pass to the scrollbar handles
+- `handleWidth` - the width of the scrollbar handles
+- `inactiveOpacity` - the opacity of the scrollbars when they are inactive
+- `scrollOffset` - the initial offset to use for the scrollable
+- `scrollPadding` - the amount of extra space to add when scrolling to preset
+  positions
+
+#### Example
+
+```tsx
+import {Scrollable} from '@hhenrichsen/canvas-commons';
+import {makeScene2D, Rect} from '@motion-canvas/2d';
+import {createRef, waitFor} from '@motion-canvas/core';
+
+export default makeScene2D(function* (view) {
+  const scrollable = createRef<Scrollable>();
+  const rect = createRef<Rect>();
+  view.add(
+    <Scrollable ref={scrollable}>
+      <Rect fill={'blue'} radius={5} ref={rect} size={40}></Rect>
+    </Scrollable>,
+  );
+
+  yield* scrollable().scrollTo([150, 150], 2);
+  yield* scrollable().scrollToLeft(1);
+  yield* scrollable().scrollToTop(1);
+  yield* scrollable().scrollTo(0, 1);
+  yield* waitFor(1);
+
+  yield rect().fill('seagreen', 1);
+  yield* rect().size(600, 2);
+  yield* waitFor(1);
+
+  yield* scrollable().scrollToBottom(1);
+  yield* scrollable().scrollToRight(1);
+  yield* scrollable().scrollBy(-100, 1);
+  yield* waitFor(5);
+});
+```
+
 ### Window
 
 The `Window` node is custom component designed to look like a window on either a
@@ -28,19 +78,21 @@ and uses a `Scrollable` internally to view larger content than its size.
 
 #### Props
 
-- `title` - the title of the window
-- `titleProps` - the props to pass to the title's `<Txt>` node
-- `headerColor` - the color of the header
 - `bodyColor` - the color of the body
+- `headerColor` - the color of the header
+- `scrollable` - the ref to the scrollable to use
+- `titleProps` - the props to pass to the title's `<Txt>` node
+- `title` - the title of the window
 - `windowStyle` - the style of the window, either `WindowStyle.Windows98` or
   `WindowStyle.MacOS`
-- `scrollable` - the ref to the scrollable to use
-- `scrollOffset` - the initial offset to use for the scrollable
+
+It also accepts any props that a `Scrollable` would accept, and passes them
+down.
 
 #### Example
 
 ```tsx
-import {Window, Scrollable, WindowStyle} from '@components';
+import {Window, Scrollable, WindowStyle} from '@hhenrichsen/canvas-commons';
 import {makeScene2D, Rect} from '@motion-canvas/2d';
 import {createRef, waitFor} from '@motion-canvas/core';
 
@@ -79,13 +131,13 @@ supports highlighting and selection of files and folders.
 
 #### Props
 
-- `structure` - the structure of the file tree
-- `folderColor` - the color of the folder icon
-- `fileColor` - the color of the file icon
 - `assetColor` - the color of the asset icon
-- `labelColor` - the color of the label
+- `fileColor` - the color of the file icon
+- `folderColor` - the color of the folder icon
 - `indentAmount` - the amount to indent each level of the tree
+- `labelColor` - the color of the label
 - `rowSize` - the size of each row in the tree
+- `structure` - the structure of the file tree
 
 #### Example
 
