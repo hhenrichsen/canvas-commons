@@ -42,6 +42,9 @@ export class Scrollable extends Rect {
       .childrenAs<Layout>()
       .reduce(
         (b, child) => {
+          if (!(child instanceof Layout)) {
+            return b;
+          }
           const combinedLowX = Math.min(
             b.x,
             child.position().x - child.size().x / 2,
