@@ -36,8 +36,34 @@ export interface ScrollableProps extends RectProps {
 
 @nodeName('Scrollable')
 export class Scrollable extends Rect {
+  @initial(0)
+  @vector2Signal('scrollOffset')
+  public declare readonly scrollOffset: Vector2Signal<number>;
+
+  @initial(4)
+  @vector2Signal('scrollPadding')
+  public declare readonly scrollPadding: Vector2Signal<number>;
+
+  @initial(0.5)
+  @vector2Signal('inactiveOpacity')
+  public declare readonly inactiveOpacity: Vector2Signal<number>;
+
+  @initial(1)
+  @vector2Signal('activeOpacity')
+  public declare readonly activeOpacity: Vector2Signal<number>;
+
+  @initial(8)
+  @signal()
+  public declare readonly handleWidth: SimpleSignal<number>;
+
+  @initial(16)
+  @signal()
+  public declare readonly handleInset: SimpleSignal<number>;
+
+  private readonly scrollOpacity = Vector2.createSignal();
+
   @computed()
-  public contentsBox() {
+  private contentsBox() {
     return this.contentsRef()
       .childrenAs<Layout>()
       .reduce(
@@ -80,43 +106,17 @@ export class Scrollable extends Rect {
   }
 
   @computed()
-  public contentsSize() {
+  private contentsSize() {
     return this.contentsBox().size;
   }
 
   @computed()
-  public contentsProportion() {
+  private contentsProportion() {
     return this.size().div([
       this.contentsSize().width,
       this.contentsSize().height,
     ]);
   }
-
-  @initial(0)
-  @vector2Signal('scrollOffset')
-  public declare readonly scrollOffset: Vector2Signal<number>;
-
-  @initial(4)
-  @vector2Signal('scrollPadding')
-  public declare readonly scrollPadding: Vector2Signal<number>;
-
-  @initial(0.5)
-  @vector2Signal('inactiveOpacity')
-  public declare readonly inactiveOpacity: Vector2Signal<number>;
-
-  @initial(1)
-  @vector2Signal('activeOpacity')
-  public declare readonly activeOpacity: Vector2Signal<number>;
-
-  @initial(8)
-  @signal()
-  public declare readonly handleWidth: SimpleSignal<number>;
-
-  @initial(16)
-  @signal()
-  public declare readonly handleInset: SimpleSignal<number>;
-
-  private readonly scrollOpacity = Vector2.createSignal();
 
   @computed()
   private scrollOpacityY() {
@@ -139,8 +139,6 @@ export class Scrollable extends Rect {
     }
     return this.scrollOpacity().x;
   }
-
-  private readonly contentsRef = createRef<Layout>();
 
   @computed()
   private handleSize() {
@@ -177,6 +175,8 @@ export class Scrollable extends Rect {
       ),
     );
   }
+
+  private readonly contentsRef = createRef<Layout>();
 
   public constructor(props: ScrollableProps) {
     super({...props, clip: true});
