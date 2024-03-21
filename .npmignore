@@ -8,3 +8,5 @@
 tsconfig.json
 vite.config.ts
 test
+*.mp4
+output
