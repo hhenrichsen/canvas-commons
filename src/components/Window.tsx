@@ -11,8 +11,14 @@ import {
   canvasStyleSignal,
   nodeName,
   View2D,
+  signal,
 } from '@motion-canvas/2d';
-import {PossibleVector2, Reference, SignalValue} from '@motion-canvas/core';
+import {
+  PossibleVector2,
+  Reference,
+  SignalValue,
+  SimpleSignal,
+} from '@motion-canvas/core';
 import {Colors} from '../Colors';
 import {Scrollable, ScrollableProps} from './Scrollable';
 import {belowScreenPosition} from '../Util';
@@ -35,9 +41,12 @@ export interface WindowProps extends ScrollableProps {
 
 @nodeName('Window')
 export class Window extends Rect {
-  public declare readonly title: SignalValue<string>;
+  @initial('')
+  @signal()
+  public declare readonly title: SimpleSignal<string>;
 
-  public declare readonly titleProps: TxtProps;
+  @signal()
+  public declare readonly titleProps: SimpleSignal<TxtProps>;
 
   @initial(Colors.Tailwind.Slate['700'])
   @canvasStyleSignal()
