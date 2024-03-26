@@ -12,6 +12,7 @@ import {
   nodeName,
   View2D,
   signal,
+  withDefaults,
 } from '@motion-canvas/2d';
 import {
   PossibleVector2,
@@ -185,3 +186,11 @@ export class Window extends Rect {
     yield* this.position(oldPosition, duration);
   }
 }
+
+export const Windows98Window = withDefaults(Window, {
+  windowStyle: WindowStyle.Windows98,
+});
+
+export const MacOSWindow = withDefaults(Window, {
+  windowStyle: WindowStyle.MacOS,
+});
