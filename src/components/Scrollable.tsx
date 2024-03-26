@@ -35,6 +35,7 @@ export interface ScrollableProps extends RectProps {
   scrollPadding?: SignalValue<PossibleVector2>;
   handleWidth?: SignalValue<number>;
   handleInset?: SignalValue<number>;
+  zoom?: SignalValue<number>;
 }
 
 @nodeName('Scrollable')
@@ -63,10 +64,19 @@ export class Scrollable extends Rect {
   @signal()
   public declare readonly handleInset: SimpleSignal<number>;
 
+  @initial(1)
+  @signal()
+  public declare readonly zoom: SimpleSignal<number>;
+
   private readonly scrollOpacity = Vector2.createSignal();
 
   @computed()
-  private contentsBox() {
+  private inverseZoom() {
+    return 1 / this.zoom();
+  }
+
+  @computed()
+  public contentsBox() {
     return this.contentsRef()
       .childrenAs<Layout>()
       .reduce(
@@ -115,10 +125,9 @@ export class Scrollable extends Rect {
 
   @computed()
   private contentsProportion() {
-    return this.size().div([
-      this.contentsSize().width,
-      this.contentsSize().height,
-    ]);
+    return this.size()
+      .mul(this.inverseZoom())
+      .div([this.contentsSize().width, this.contentsSize().height]);
   }
 
   @computed()
@@ -187,7 +196,10 @@ export class Scrollable extends Rect {
 
     this.add(
       <Layout layout={false}>
-        <Node position={() => this.scrollOffset().mul(-1)}>
+        <Node
+          position={() => this.scrollOffset().mul(-1).mul(this.zoom())}
+          scale={this.zoom}
+        >
           <Layout ref={this.contentsRef}>{props.children}</Layout>
         </Node>
         <Rect
@@ -279,8 +291,10 @@ export class Scrollable extends Rect {
   ) {
     const xSign = signum(0.5 - x);
     const ySign = signum(0.5 - y);
-    const viewOffsetX = xSign * (this.size().x / 2 - this.scrollPadding().x);
-    const viewOffsetY = ySign * (this.size().y / 2 - this.scrollPadding().y);
+    const viewOffsetX =
+      xSign * (this.size().x / 2 - this.scrollPadding().x) * this.inverseZoom();
+    const viewOffsetY =
+      ySign * (this.size().y / 2 - this.scrollPadding().y) * this.inverseZoom();
     yield* this.scrollTo(
       {
         x:

@@ -1,5 +1,18 @@
 {
   "version": 0,
-  "timeEvents": [],
+  "timeEvents": [
+    {
+      "name": "spline follow",
+      "targetTime": 24
+    },
+    {
+      "name": "zoomed out",
+      "targetTime": 17
+    },
+    {
+      "name": "zoomed in",
+      "targetTime": 30
+    }
+  ],
   "seed": 2637074891
 }

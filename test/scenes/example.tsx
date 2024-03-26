@@ -1,5 +1,5 @@
 import {makeScene2D} from '@motion-canvas/2d/lib/scenes';
-import {waitFor} from '@motion-canvas/core/lib/flow';
+import {waitFor, waitUntil} from '@motion-canvas/core/lib/flow';
 import {Gradient, Icon, Knot, Rect, Spline} from '@motion-canvas/2d';
 import {createRef} from '@motion-canvas/core';
 import {Windows98Button} from '@components/WindowsButton';
@@ -83,8 +83,8 @@ export default makeScene2D(function* (view) {
       ,
     </>,
   );
-  yield* r().width(600, 1);
 
+  yield* r().width(600, 1);
   yield* scrollable().scrollToTop(1);
   yield* waitFor(1);
   yield* scrollable().scrollToRight(1);
@@ -110,5 +110,37 @@ export default makeScene2D(function* (view) {
   yield* waitFor(1);
   yield* scrollable().scrollToBottomLeft(1);
 
+  yield* waitUntil('spline follow');
+  yield* scrollable().scrollTo(spl().getPointAtPercentage(0).position, 1);
   yield* scrollable().followCurve(spl(), 5);
+
+  yield* waitUntil('zoomed out');
+  yield* waitFor(1);
+  yield* scrollable().zoom(0.5, 1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToRightCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToBottomCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToLeftCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToTopCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToCenter(1);
+  yield* waitFor(1);
+
+  yield* waitUntil('zoomed in');
+
+  yield* scrollable().zoom(2, 1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToRightCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToBottomCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToLeftCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToTopCenter(1);
+  yield* waitFor(1);
+  yield* scrollable().scrollToCenter(1);
+  yield* waitFor(1);
 });
