@@ -7,11 +7,11 @@
     },
     {
       "name": "zoomed out",
-      "targetTime": 5.8
+      "targetTime": 6
     },
     {
       "name": "zoomed in",
-      "targetTime": 17.800000000000004
+      "targetTime": 19
     }
   ],
   "seed": 2637074891

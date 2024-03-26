@@ -5,6 +5,7 @@ import {createRef} from '@motion-canvas/core';
 import {Scrollable} from '@components/Scrollable';
 import {WindowStyle, Window} from '@components/Window';
 import {Colors} from '@Colors';
+import {DistortedCurve} from '@components/DistortedCurve';
 
 export default makeScene2D(function* (view) {
   const scrollable = createRef<Scrollable>();
@@ -17,11 +18,14 @@ export default makeScene2D(function* (view) {
       size={[500, 550]}
       scrollPadding={8}
     >
-      <Rect
-        ref={r}
-        size={600}
-        fill={
-          new Gradient({
+      <Rect ref={r} size={600} radius={5}></Rect>
+      <DistortedCurve
+        curve={r}
+        samples={100}
+        count={2}
+        displacement={5}
+        lineProps={{
+          stroke: new Gradient({
             stops: [
               {
                 color: Colors.Tailwind.Amber['600'],
@@ -35,10 +39,25 @@ export default makeScene2D(function* (view) {
             type: 'linear',
             from: [0, -600],
             to: [0, 600],
-          })
-        }
-        radius={5}
-      ></Rect>
+          }),
+          fill: new Gradient({
+            stops: [
+              {
+                color: Colors.Tailwind.Amber['600'] + '20',
+                offset: 0,
+              },
+              {
+                color: Colors.Tailwind.Amber['200'] + '20',
+                offset: 1,
+              },
+            ],
+            type: 'linear',
+            from: [0, -600],
+            to: [0, 600],
+          }),
+          lineWidth: 2,
+        }}
+      ></DistortedCurve>
       <Rect
         size={[100, 100]}
         position={[0, 500]}
