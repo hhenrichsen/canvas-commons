@@ -19,11 +19,15 @@ import {
   TimingFunction,
   Vector2,
   Vector2Signal,
+  all,
   clampRemap,
   createRef,
   createSignal,
+  delay,
+  easeInOutCubic,
+  map,
   unwrap,
-  waitFor,
+  useLogger,
 } from '@motion-canvas/core';
 import {Colors} from '../Colors';
 import {signum} from '@Util';
@@ -32,6 +36,8 @@ export interface ScrollableProps extends RectProps {
   activeOpacity?: SignalValue<number>;
   inactiveOpacity?: SignalValue<number>;
   handleProps?: RectProps;
+  scrollHandleDelay?: SignalValue<number>;
+  scrollHandleDuration?: SignalValue<number>;
   scrollOffset?: SignalValue<PossibleVector2>;
   scrollPadding?: SignalValue<PossibleVector2>;
   handleWidth?: SignalValue<number>;
@@ -69,7 +75,20 @@ export class Scrollable extends Rect {
   @signal()
   public declare readonly zoom: SimpleSignal<number>;
 
+  @initial(-0.2)
+  @signal()
+  public declare readonly scrollHandleDelay: SimpleSignal<number>;
+
+  @signal()
+  public declare readonly scrollHandleDuration: SimpleSignal<number>;
+
   private readonly scrollOpacity = Vector2.createSignal();
+
+  @signal()
+  private readonly pathProgress = createSignal(0);
+
+  @signal()
+  private readonly path = createSignal<Curve>();
 
   @computed()
   private inverseZoom() {
@@ -194,6 +213,10 @@ export class Scrollable extends Rect {
   public constructor(props: ScrollableProps) {
     super({...props, clip: true});
     this.scrollOpacity(this.inactiveOpacity);
+    this.scrollHandleDuration(
+      props.scrollHandleDuration ??
+        (props.scrollHandleDelay ? -props.scrollHandleDelay : 0.2),
+    );
 
     this.add(
       <Layout layout={false}>
@@ -227,13 +250,34 @@ export class Scrollable extends Rect {
     );
   }
 
-  public *scrollTo(
-    offset: PossibleVector2,
+  public *tweenZoom(
+    v: SignalValue<number>,
+    duration: number,
+    timingFunction?: TimingFunction,
+    interpolationFunction?: InterpolationFunction<number>,
+  ) {
+    yield this.scrollOpacity(this.activeOpacity, 0.1);
+    yield* all(
+      delay(
+        duration + this.scrollHandleDelay(),
+        this.scrollOpacity(this.inactiveOpacity, this.scrollHandleDuration()),
+      ),
+      this.zoom.context.tweener(
+        v,
+        duration,
+        timingFunction ?? easeInOutCubic,
+        interpolationFunction ?? map,
+      ),
+    );
+  }
+
+  public *tweenScrollOffset(
+    offset: SignalValue<PossibleVector2>,
     duration: number,
     timingFunction?: TimingFunction,
     interpolationFunction?: InterpolationFunction<Vector2>,
   ) {
-    const _offset = new Vector2(offset);
+    const _offset = new Vector2(unwrap(offset));
     yield this.scrollOpacity(
       () => [
         _offset.x != this.scrollOffset().x
@@ -243,16 +287,34 @@ export class Scrollable extends Rect {
           ? this.activeOpacity().y
           : this.inactiveOpacity().y,
       ],
-      duration * 0.2,
+      0.1,
     );
-    yield this.scrollOffset(
+    yield* all(
+      delay(
+        duration + this.scrollHandleDelay(),
+        this.scrollOpacity(this.inactiveOpacity, this.scrollHandleDuration()),
+      ),
+      this.scrollOffset.context.tweener(
+        offset,
+        duration,
+        timingFunction,
+        interpolationFunction,
+      ),
+    );
+  }
+
+  public *scrollTo(
+    offset: PossibleVector2,
+    duration: number,
+    timingFunction?: TimingFunction,
+    interpolationFunction?: InterpolationFunction<Vector2>,
+  ) {
+    yield* this.scrollOffset(
       offset,
       duration,
       timingFunction,
       interpolationFunction,
     );
-    yield* waitFor(duration * 0.8);
-    yield* this.scrollOpacity(this.inactiveOpacity, duration * 0.2);
   }
 
   public *scrollBy(
@@ -261,26 +323,12 @@ export class Scrollable extends Rect {
     timingFunction?: TimingFunction,
     interpolationFunction?: InterpolationFunction<Vector2>,
   ) {
-    const _offset = new Vector2(offset);
-    yield this.scrollOpacity(
-      [
-        _offset.x != this.scrollOffset().x
-          ? this.activeOpacity().x
-          : this.inactiveOpacity().x,
-        _offset.y != this.scrollOffset().y
-          ? this.activeOpacity().y
-          : this.inactiveOpacity().y,
-      ],
-      0.1,
-    );
-    yield this.scrollOffset(
+    yield* this.scrollTo(
       this.scrollOffset().add(offset),
       duration,
       timingFunction,
       interpolationFunction,
     );
-    yield* waitFor(duration - 0.2);
-    yield this.scrollOpacity(this.inactiveOpacity, 0.1);
   }
 
   public *scrollToScaled(
@@ -577,12 +625,21 @@ export class Scrollable extends Rect {
     timingFunction?: TimingFunction,
     interpolationFunction?: InterpolationFunction<number>,
   ) {
-    const c = unwrap(curve);
-    const p = createSignal(0);
-    this.scrollOffset(() => c.getPointAtPercentage(p()).position);
-    yield this.scrollOpacity(this.activeOpacity, duration * 0.2);
-    yield p(1, duration, timingFunction, interpolationFunction);
-    yield* waitFor(duration * 0.8);
-    yield* this.scrollOpacity(this.inactiveOpacity, duration * 0.2);
+    yield this.scrollOpacity(this.activeOpacity, 0.1);
+
+    this.path(curve);
+    this.scrollOffset(() => {
+      const progress = this.pathProgress();
+      const p = this.path().getPointAtPercentage(progress).position;
+      useLogger().info(`scrollOffset: ${p}`);
+      return p;
+    });
+    yield* all(
+      delay(
+        duration + this.scrollHandleDelay(),
+        this.scrollOpacity(this.inactiveOpacity, this.scrollHandleDuration()),
+      ),
+      this.pathProgress(1, duration, timingFunction, interpolationFunction),
+    );
   }
 }

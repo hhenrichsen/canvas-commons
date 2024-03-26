@@ -105,6 +105,8 @@ export class Window extends Rect {
           handleWidth={props.handleWidth}
           inactiveOpacity={props.inactiveOpacity}
           ref={props.scrollable}
+          scrollHandleDelay={props.scrollHandleDelay}
+          scrollHandleDuration={props.scrollHandleDuration}
           scrollOffset={props.scrollOffset}
           scrollPadding={props.scrollPadding}
           zoom={props.zoom}
