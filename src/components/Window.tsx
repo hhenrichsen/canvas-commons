@@ -107,6 +107,7 @@ export class Window extends Rect {
           ref={props.scrollable}
           scrollOffset={props.scrollOffset}
           scrollPadding={props.scrollPadding}
+          zoom={props.zoom}
           size={() =>
             this.size()
               .addY(-50)
