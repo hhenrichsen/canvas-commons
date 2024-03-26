@@ -33,6 +33,9 @@ scrolled to any position within its content.
 #### Props
 
 - `activeOpacity` - the opacity of the scrollbars when they are active
+- `handleFadeoutDuration` - how long it takes for the scrollbars to fade out
+- `handleFadeoutHang` - how long the scrollbars stay visible after the last
+  scroll event
 - `handleInset` - the amount to inset the scrollbar handles
 - `handleProps` - the props to pass to the scrollbar handles
 - `handleWidth` - the width of the scrollbar handles
@@ -40,6 +43,7 @@ scrolled to any position within its content.
 - `scrollOffset` - the initial offset to use for the scrollable
 - `scrollPadding` - the amount of extra space to add when scrolling to preset
   positions
+- `zoom` - the zoom level of the scrollable
 
 #### Example
 
