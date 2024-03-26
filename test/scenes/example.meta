@@ -3,15 +3,15 @@
   "timeEvents": [
     {
       "name": "spline follow",
-      "targetTime": 24
+      "targetTime": 0
     },
     {
       "name": "zoomed out",
-      "targetTime": 17
+      "targetTime": 6
     },
     {
       "name": "zoomed in",
-      "targetTime": 30
+      "targetTime": 19
     }
   ],
   "seed": 2637074891
