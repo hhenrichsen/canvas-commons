@@ -579,6 +579,9 @@ export class Scrollable extends Rect {
     const c = deref(curve);
     const p = createSignal(0);
     this.scrollOffset(() => c.getPointAtPercentage(p()).position);
-    yield* p(1, duration, timingFunction, interpolationFunction);
+    yield this.scrollOpacity(this.activeOpacity, duration * 0.2);
+    yield p(1, duration, timingFunction, interpolationFunction);
+    yield* waitFor(duration * 0.8);
+    yield* this.scrollOpacity(this.inactiveOpacity, duration * 0.2);
   }
 }
