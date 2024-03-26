@@ -1,5 +1,9 @@
 # Canvas Commons
 
+<!-- prettier-ignore -->
+> **Warning** 
+⚠️ This library is still under construction. Breaking changes are possible until I release version 1.0.0. Update versions with caution and only after reading the commit log. ⚠️
+
 If you use this in your videos, I would appreciate credit via a link to this
 repo, or a mention by name. I would also love to see them; feel free to show me
 on the motion canvas discord (I'm `@Hunter` on there).
