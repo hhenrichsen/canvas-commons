@@ -1,15 +1,20 @@
-import {deref} from '@Util';
 import {Curve, Line, LineProps} from '@motion-canvas/2d';
-import {Reference, createComputed, range, useRandom} from '@motion-canvas/core';
+import {
+  SignalValue,
+  createComputed,
+  range,
+  unwrap,
+  useRandom,
+} from '@motion-canvas/core';
 
 export function DistortedCurve(props: {
-  curve: Curve | Reference<Curve>;
+  curve: SignalValue<Curve>;
   displacement?: number;
   count?: number;
   samples?: number;
   lineProps: LineProps;
 }) {
-  const c = deref(props.curve);
+  const c = unwrap(props.curve);
   const points = createComputed(() =>
     range((props.samples ?? 100) + 1).map(
       i => c.getPointAtPercentage(i / props.samples).position,
