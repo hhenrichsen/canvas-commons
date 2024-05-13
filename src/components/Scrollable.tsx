@@ -27,7 +27,6 @@ import {
   easeInOutCubic,
   map,
   unwrap,
-  useLogger,
 } from '@motion-canvas/core';
 import {Colors} from '../Colors';
 import {signum} from '@Util';
@@ -631,7 +630,6 @@ export class Scrollable extends Rect {
     this.scrollOffset(() => {
       const progress = this.pathProgress();
       const p = this.path().getPointAtPercentage(progress).position;
-      useLogger().info(`scrollOffset: ${p}`);
       return p;
     });
     yield* all(
