@@ -1,18 +1,99 @@
 import {makeScene2D} from '@motion-canvas/2d/lib/scenes';
 import {waitFor, waitUntil} from '@motion-canvas/core/lib/flow';
-import {Gradient, Knot, Rect, Spline} from '@motion-canvas/2d';
+import {
+  Code,
+  Gradient,
+  Knot,
+  Layout,
+  LezerHighlighter,
+  Rect,
+  Spline,
+} from '@motion-canvas/2d';
 import {createRef} from '@motion-canvas/core';
 import {Scrollable} from '@components/Scrollable';
 import {WindowStyle, Window} from '@components/Window';
 import {Colors} from '@Colors';
 import {DistortedCurve} from '@components/DistortedCurve';
+import {drawIn} from '@Util';
+import {parser as javascript} from '@lezer/javascript';
+import {CatppuccinMochHighlightStyle} from '@highlightstyle/Catppuccin';
+import {CodeLineNumbers} from '@components/CodeLineNumbers';
 
 export default makeScene2D(function* (view) {
+  const code = createRef<Code>();
+  const codeContainer = createRef<Layout>();
+  view.add(
+    <Layout layout direction={'row'} gap={20} opacity={0} ref={codeContainer}>
+      <CodeLineNumbers
+        code={code}
+        numberProps={{
+          fill: Colors.Catppuccin.Mocha.Overlay2,
+        }}
+      ></CodeLineNumbers>
+      <Code
+        ref={code}
+        highlighter={
+          new LezerHighlighter(javascript, CatppuccinMochHighlightStyle)
+        }
+        code={`\
+const btn = document.getElementById('btn');
+let count = 0;
+
+function render() {
+  btn.innerHTML = \`Count: \${count}\`;
+}
+
+btn.addEventListener('click', () => {
+  if (count < 10) {
+    count++;
+    render();
+  }
+});
+
+class Cat {
+  constructor(name) {
+    this.name = name ?? 'Mochi';
+  }
+
+  meow() {
+    console.log(\`Meow! I'm \${this.name}\`);
+  }
+}`}
+        fontSize={30}
+      />
+    </Layout>,
+  );
+  yield* codeContainer().opacity(1, 1);
+  yield* waitFor(1);
+  yield* code().code.append('\n// This is a comment', 1);
+  yield* waitFor(1);
+  yield* codeContainer().opacity(0, 1);
+  code().remove();
+
+  const draw = createRef<Rect>();
+  view.add(
+    <Rect
+      radius={5}
+      size={200}
+      ref={draw}
+      lineCap={'round'}
+      strokeFirst
+    ></Rect>,
+  );
+
+  yield* drawIn(draw, 'white', 'white', 1, true);
+
+  yield* waitFor(1);
+  yield* draw().opacity(0, 1);
+  yield* waitFor(1);
+
   const scrollable = createRef<Scrollable>();
   const r = createRef<Rect>();
   const spl = createRef<Spline>();
+  const win = createRef<Window>();
   view.add(
     <Window
+      ref={win}
       windowStyle={WindowStyle.Windows98}
       scrollable={scrollable}
       size={[500, 550]}
@@ -91,6 +172,7 @@ export default makeScene2D(function* (view) {
       </Spline>
     </Window>,
   );
+  yield* win().open(view, 1);
 
   yield* waitUntil('spline follow');
   yield* scrollable().scrollTo(spl().getPointAtPercentage(0).position, 1);
