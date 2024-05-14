@@ -59,3 +59,38 @@ export function* drawIn(
     );
   }
 }
+
+function getLinkPoints(node: Layout) {
+  return [node.left(), node.right(), node.top(), node.bottom()];
+}
+
+export function getClosestLinkPoints(
+  a: SignalValue<Layout>,
+  b: SignalValue<Layout>,
+): [Vector2, Vector2] {
+  const aPoints = getLinkPoints(unwrap(a));
+  const bPoints = getLinkPoints(unwrap(b));
+
+  const aClosest = aPoints.map(aPoint => {
+    return bPoints.map(bPoint => {
+      return {
+        aPoint,
+        bPoint,
+        distanceSq:
+          Math.pow(aPoint.x - bPoint.x, 2) + Math.pow(aPoint.y - bPoint.y, 2),
+      };
+    });
+  });
+
+  const min = aClosest.reduce(
+    (a, b) => {
+      const bMin = b.reduce((a, b) => {
+        return a.distanceSq < b.distanceSq ? a : b;
+      });
+      return a.distanceSq < bMin.distanceSq ? a : bMin;
+    },
+    {aPoint: {x: 0, y: 0}, bPoint: {x: 0, y: 0}, distanceSq: Infinity},
+  );
+  delete min.distanceSq;
+  return [new Vector2(min.aPoint), new Vector2(min.bPoint)];
+}
