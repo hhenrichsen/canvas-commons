@@ -10,7 +10,7 @@ export class Glow extends Layout {
   @signal()
   public declare readonly amount: SimpleSignal<number, this>;
 
-  public constructor(props: LayoutProps) {
+  public constructor(props: GlowProps) {
     super({...props});
   }
 
