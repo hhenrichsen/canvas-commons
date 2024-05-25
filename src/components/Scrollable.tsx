@@ -96,7 +96,7 @@ export class Scrollable extends Rect {
 
   @computed()
   public contentsBox() {
-    return this.contentsRef()
+    return this.contents()
       .childrenAs<Layout>()
       .reduce(
         (b, child) => {
@@ -207,7 +207,7 @@ export class Scrollable extends Rect {
     );
   }
 
-  private readonly contentsRef = createRef<Layout>();
+  public readonly contents = createRef<Layout>();
 
   public constructor(props: ScrollableProps) {
     super({...props, clip: true});
@@ -223,7 +223,7 @@ export class Scrollable extends Rect {
           position={() => this.scrollOffset().mul(-1).mul(this.zoom())}
           scale={this.zoom}
         >
-          <Layout ref={this.contentsRef}>{props.children}</Layout>
+          <Layout ref={this.contents}>{props.children}</Layout>
         </Node>
         <Rect
           fill={Colors.Tailwind.Slate['50']}
