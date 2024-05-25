@@ -19,6 +19,7 @@ import {
   Reference,
   SignalValue,
   SimpleSignal,
+  createRef,
 } from '@motion-canvas/core';
 import {Colors} from '../Colors';
 import {Scrollable, ScrollableProps} from './Scrollable';
@@ -72,12 +73,15 @@ export class Window extends Rect {
 
   public declare readonly windowStyle: WindowStyle;
 
+  public readonly scrollable: Reference<Scrollable>;
+
   public constructor(props: WindowProps) {
     super({
       size: 400,
       ...props,
     });
     this.windowStyle = props.windowStyle ?? WindowStyle.MacOS;
+    this.scrollable = props.scrollable ?? createRef<Scrollable>();
     if (!props.headerColor && this.windowStyle == WindowStyle.Windows98) {
       this.headerColor(
         () =>
@@ -117,11 +121,12 @@ export class Window extends Rect {
           handleProps={props.handleProps}
           handleWidth={props.handleWidth}
           inactiveOpacity={props.inactiveOpacity}
-          ref={props.scrollable}
+          ref={this.scrollable}
           scrollHandleDelay={props.scrollHandleDelay}
           scrollHandleDuration={props.scrollHandleDuration}
           scrollOffset={props.scrollOffset}
           scrollPadding={props.scrollPadding}
+          fill={props.bodyColor}
           zoom={props.zoom}
           size={() =>
             this.size()

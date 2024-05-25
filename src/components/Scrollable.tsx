@@ -207,7 +207,7 @@ export class Scrollable extends Rect {
     );
   }
 
-  public readonly contents = createRef<Layout>();
+  public readonly contents;
 
   public constructor(props: ScrollableProps) {
     super({...props, clip: true});
@@ -216,6 +216,7 @@ export class Scrollable extends Rect {
       props.scrollHandleDuration ??
         (props.scrollHandleDelay ? -props.scrollHandleDelay : 0.2),
     );
+    this.contents = createRef<Layout>();
 
     this.add(
       <Layout layout={false}>

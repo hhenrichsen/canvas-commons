@@ -18,6 +18,7 @@ import {drawIn} from '@Util';
 import {parser as javascript} from '@lezer/javascript';
 import {CatppuccinMochHighlightStyle} from '@highlightstyle/Catppuccin';
 import {CodeLineNumbers} from '@components/CodeLineNumbers';
+import {Terminal} from '@components/Terminal';
 
 export default makeScene2D(function* (view) {
   const code = createRef<Code>();
@@ -207,4 +208,98 @@ class Cat {
   yield* waitFor(1);
   yield* scrollable().scrollToCenter(1);
   yield* waitFor(1);
+
+  yield* win().close(view, 1);
+
+  const terminal = createRef<Terminal>();
+  yield view.add(
+    <Terminal
+      ref={terminal}
+      size={[1200, 800]}
+      headerColor={Colors.Catppuccin.Mocha.Base}
+      bodyColor={Colors.Catppuccin.Mocha.Mantle}
+      fontFamily={'Ellograph CF'}
+      fontSize={32}
+      buttonColors={[
+        Colors.Catppuccin.Mocha.Red,
+        Colors.Catppuccin.Mocha.Yellow,
+        Colors.Catppuccin.Mocha.Green,
+      ]}
+      title={'Terminal'}
+    />,
+  );
+  scrollable().fill(Colors.Catppuccin.Mocha.Mantle);
+  yield* terminal().open(view, 1);
+
+  yield* terminal().typeLine('npm init @motion-canvas@latest', 2);
+  yield* waitFor(1);
+  terminal().lineAppear('');
+  terminal().lineAppear('Need to install the following packages:');
+  terminal().lineAppear('  @motion-canvas/create');
+  terminal().lineAppear('Ok to proceed? (y)');
+  yield* waitFor(1);
+  yield* terminal().typeAfterLine(' y', 1);
+  terminal().lineAppear([
+    {text: '? Project name '},
+    {text: '»', fill: Colors.Catppuccin.Mocha.Surface2},
+  ]);
+  yield* waitFor(1);
+  yield* terminal().typeAfterLine(' my-animation', 1);
+  yield* waitFor(1);
+  terminal().replaceLine([
+    {text: '√', fill: Colors.Catppuccin.Mocha.Green},
+    {text: ' Project name '},
+    {text: '...', fill: Colors.Catppuccin.Mocha.Surface2},
+    {text: ' my-animation'},
+  ]);
+  terminal().lineAppear([
+    {text: '? Project path '},
+    {text: '»', fill: Colors.Catppuccin.Mocha.Surface2},
+  ]);
+  yield* terminal().typeAfterLine(' my-animation', 1);
+  yield* waitFor(1);
+  terminal().replaceLine([
+    {text: '√', fill: Colors.Catppuccin.Mocha.Green},
+    {text: ' Project path '},
+    {text: '...', fill: Colors.Catppuccin.Mocha.Surface2},
+    {text: ' my-animation'},
+  ]);
+  terminal().lineAppear('? Language');
+  terminal().appearAfterLine({
+    text: ' » - Use arrow-keys. Return to submit.',
+    fill: Colors.Catppuccin.Mocha.Surface2,
+  });
+  terminal().lineAppear({
+    text: '>   TypeScript (Recommended)',
+    fill: Colors.Catppuccin.Mocha.Sky,
+  });
+  terminal().lineAppear('    JavaScript');
+  yield* waitFor(3);
+
+  terminal().deleteLine();
+  terminal().deleteLine();
+  terminal().replaceLine([
+    {text: '√', fill: Colors.Catppuccin.Mocha.Green},
+    {text: ' Language '},
+    {text: '...', fill: Colors.Catppuccin.Mocha.Surface2},
+    {text: 'TypeScript (Recommended)'},
+  ]);
+  terminal().lineAppear('');
+
+  terminal().lineAppear({
+    text: '√ Scaffolding complete. You can now run:',
+    fill: Colors.Catppuccin.Mocha.Green,
+  });
+  terminal().lineAppear({
+    text: '    cd my-animation',
+  });
+  terminal().lineAppear({
+    text: '    npm install',
+  });
+  terminal().lineAppear({
+    text: '    npm start',
+  });
+
+  yield* waitFor(2);
+  yield* terminal().close(view, 1);
 });
