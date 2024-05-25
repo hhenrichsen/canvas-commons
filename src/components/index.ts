@@ -9,3 +9,4 @@ export * from './MotionCanvasLogo';
 export * from './Scrollable';
 export * from './Window';
 export * from './WindowsButton';
+export * from './Terminal';
