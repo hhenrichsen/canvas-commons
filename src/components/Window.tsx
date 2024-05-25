@@ -38,6 +38,9 @@ export interface WindowProps extends ScrollableProps {
   windowStyle?: WindowStyle;
   scrollable?: Reference<Scrollable>;
   scrollOffset?: SignalValue<PossibleVector2>;
+  buttonColors?: SignalValue<
+    [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
+  >;
 }
 
 @nodeName('Window')
@@ -56,6 +59,16 @@ export class Window extends Rect {
   @initial(Colors.Tailwind.Slate['800'])
   @canvasStyleSignal()
   public declare readonly bodyColor: CanvasStyleSignal<this>;
+
+  @initial([
+    Colors.Tailwind.Red['500'],
+    Colors.Tailwind.Yellow['500'],
+    Colors.Tailwind.Green['500'],
+  ])
+  @signal()
+  public declare readonly buttonColors: SimpleSignal<
+    [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
+  >;
 
   public declare readonly windowStyle: WindowStyle;
 
@@ -144,9 +157,9 @@ export class Window extends Rect {
           </Rect>
           {this.windowStyle == WindowStyle.MacOS ? (
             <Rect gap={10}>
-              <Circle size={20} fill={Colors.Tailwind.Red['500']}></Circle>
-              <Circle size={20} fill={Colors.Tailwind.Yellow['500']}></Circle>
-              <Circle size={20} fill={Colors.Tailwind.Green['500']}></Circle>
+              <Circle size={20} fill={this.buttonColors()[0]}></Circle>
+              <Circle size={20} fill={this.buttonColors()[1]}></Circle>
+              <Circle size={20} fill={this.buttonColors()[2]}></Circle>
             </Rect>
           ) : null}
           {this.windowStyle == WindowStyle.Windows98 ? (
