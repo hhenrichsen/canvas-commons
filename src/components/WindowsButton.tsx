@@ -1,4 +1,10 @@
-import {Rect, ComponentChildren, RectProps, Line} from '@motion-canvas/2d';
+import {
+  Rect,
+  ComponentChildren,
+  RectProps,
+  Line,
+  PossibleCanvasStyle,
+} from '@motion-canvas/2d';
 import {Colors} from '../Colors';
 import {
   SignalValue,
@@ -8,12 +14,16 @@ import {
   unwrap,
 } from '@motion-canvas/core';
 
-export const Windows98Button = (
-  props: RectProps & {
-    children?: SignalValue<ComponentChildren>;
-    borderSize?: SignalValue<number>;
-  },
-) => {
+export const Windows98Button = ({
+  lightColor = Colors.Tailwind.Slate['950'],
+  darkColor = Colors.Tailwind.Slate['400'],
+  ...props
+}: RectProps & {
+  children?: SignalValue<ComponentChildren>;
+  borderSize?: SignalValue<number>;
+  lightColor?: SignalValue<PossibleCanvasStyle>;
+  darkColor?: SignalValue<PossibleCanvasStyle>;
+}) => {
   const borderSize = createComputed(() => unwrap(props.borderSize) ?? 4);
   const content = createRef<Rect>();
   const container = createSignal<Rect>();
@@ -27,12 +37,12 @@ export const Windows98Button = (
       layout
       lineWidth={borderSize() * 2}
       ref={container}
-      stroke={'white'}
+      stroke={lightColor}
       {...nonChildProps}
       margin={borderSize()}
     >
       <Rect
-        fill={Colors.Tailwind.Slate['950']}
+        fill={darkColor}
         layout={false}
         size={() => content()?.size().add(borderSize()) ?? 0}
         x={() => borderSize() / 2}
@@ -46,7 +56,7 @@ export const Windows98Button = (
             ? [tr, tr.addX(borderSize()), tr.add([borderSize(), -borderSize()])]
             : [];
         }}
-        fill={Colors.Tailwind.Slate['950']}
+        fill={darkColor}
       ></Line>
       <Line
         layout={false}
@@ -56,18 +66,16 @@ export const Windows98Button = (
             ? [bl, bl.add([-borderSize(), borderSize()]), bl.addY(borderSize())]
             : [];
         }}
-        fill={Colors.Tailwind.Slate['950']}
+        fill={darkColor}
       ></Line>
       <Rect
         alignItems={'center'}
-        fill={Colors.Tailwind.Slate['400']}
+        fill={nonChildProps.fill}
         justifyContent={'center'}
         layout
         minHeight={24}
         minWidth={24}
         ref={content}
-        shadowColor={Colors.Tailwind.Slate['950']}
-        shadowOffset={1}
       >
         {props.children}
       </Rect>

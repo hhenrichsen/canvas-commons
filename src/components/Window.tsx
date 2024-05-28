@@ -1,3 +1,5 @@
+import {Colors} from '@Colors';
+import {belowScreenPosition} from '@Util';
 import {
   Rect,
   Circle,
@@ -15,15 +17,14 @@ import {
   withDefaults,
 } from '@motion-canvas/2d';
 import {
+  PossibleColor,
   PossibleVector2,
   Reference,
   SignalValue,
   SimpleSignal,
   createRef,
 } from '@motion-canvas/core';
-import {Colors} from '../Colors';
-import {Scrollable, ScrollableProps} from './Scrollable';
-import {belowScreenPosition} from '../Util';
+import {ScrollableProps, Scrollable} from './Scrollable';
 import {Windows98Button} from './WindowsButton';
 
 export enum WindowStyle {
@@ -42,16 +43,20 @@ export interface WindowProps extends ScrollableProps {
   buttonColors?: SignalValue<
     [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
   >;
+  buttonIconColors?: SignalValue<
+    [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
+  >;
+  buttonLightColor?: SignalValue<PossibleCanvasStyle>;
+  buttonDarkColor?: SignalValue<PossibleCanvasStyle>;
 }
 
 @nodeName('Window')
 export class Window extends Rect {
-  @initial('')
   @signal()
-  public declare readonly title: SimpleSignal<string>;
+  public declare readonly title: SimpleSignal<string, this>;
 
   @signal()
-  public declare readonly titleProps: SimpleSignal<TxtProps>;
+  public declare readonly titleProps: SimpleSignal<TxtProps, this>;
 
   @initial(Colors.Tailwind.Slate['700'])
   @canvasStyleSignal()
@@ -61,27 +66,54 @@ export class Window extends Rect {
   @canvasStyleSignal()
   public declare readonly bodyColor: CanvasStyleSignal<this>;
 
-  @initial([
-    Colors.Tailwind.Red['500'],
-    Colors.Tailwind.Yellow['500'],
-    Colors.Tailwind.Green['500'],
-  ])
   @signal()
   public declare readonly buttonColors: SimpleSignal<
-    [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
+    [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle],
+    this
+  >;
+
+  @initial(['black', 'black', 'black'])
+  @signal()
+  public declare readonly buttonIconColors: SimpleSignal<
+    [PossibleColor, PossibleColor, PossibleColor],
+    this
   >;
 
   public declare readonly windowStyle: WindowStyle;
+
+  @initial('white')
+  @canvasStyleSignal()
+  public declare readonly buttonLightColor: CanvasStyleSignal<this>;
+
+  @initial(Colors.Tailwind.Slate['950'])
+  @canvasStyleSignal()
+  public declare readonly buttonDarkColor: CanvasStyleSignal<this>;
 
   public readonly scrollable: Reference<Scrollable>;
 
   public constructor(props: WindowProps) {
     super({
       size: 400,
+      stroke: 'white',
       ...props,
     });
     this.windowStyle = props.windowStyle ?? WindowStyle.MacOS;
     this.scrollable = props.scrollable ?? createRef<Scrollable>();
+    if (!props.buttonColors) {
+      this.buttonColors(
+        this.windowStyle == WindowStyle.MacOS
+          ? [
+              Colors.Tailwind.Red['500'],
+              Colors.Tailwind.Yellow['500'],
+              Colors.Tailwind.Green['500'],
+            ]
+          : [
+              Colors.Tailwind.Slate['400'],
+              Colors.Tailwind.Slate['400'],
+              Colors.Tailwind.Slate['400'],
+            ],
+      );
+    }
     if (!props.headerColor && this.windowStyle == WindowStyle.Windows98) {
       this.headerColor(
         () =>
@@ -105,14 +137,14 @@ export class Window extends Rect {
         layout
         clip
         direction={'column-reverse'}
-        fill={Colors.Tailwind.Slate['800']}
+        fill={this.bodyColor}
         radius={this.windowStyle === WindowStyle.MacOS ? 16 : 0}
         size={this.size}
         shadowColor={Colors.Tailwind.Slate['950'] + '80'}
         shadowOffset={this.windowStyle == WindowStyle.MacOS ? 4 : 20}
         shadowBlur={this.windowStyle == WindowStyle.MacOS ? 8 : 0}
         padding={this.windowStyle == WindowStyle.Windows98 ? 8 : 0}
-        stroke={this.windowStyle == WindowStyle.MacOS ? undefined : 'white'}
+        stroke={this.windowStyle == WindowStyle.MacOS ? undefined : this.stroke}
         lineWidth={2}
       >
         <Scrollable
@@ -126,7 +158,7 @@ export class Window extends Rect {
           scrollHandleDuration={props.scrollHandleDuration}
           scrollOffset={props.scrollOffset}
           scrollPadding={props.scrollPadding}
-          fill={props.bodyColor}
+          fill={this.bodyColor}
           zoom={props.zoom}
           size={() =>
             this.size()
@@ -147,7 +179,9 @@ export class Window extends Rect {
           fill={this.headerColor}
           padding={10}
           height={50}
-          stroke={this.windowStyle == WindowStyle.MacOS ? undefined : 'white'}
+          stroke={
+            this.windowStyle == WindowStyle.MacOS ? undefined : this.stroke
+          }
           lineWidth={2}
           shadowColor={Colors.Tailwind.Slate['950']}
           shadowOffset={2}
@@ -156,35 +190,55 @@ export class Window extends Rect {
             <Txt
               fill={Colors.Tailwind.Slate['50']}
               fontSize={30}
-              text={props.title}
               {...props.titleProps}
+              text={props.title}
             ></Txt>
           </Rect>
           {this.windowStyle == WindowStyle.MacOS ? (
             <Rect gap={10}>
-              <Circle size={20} fill={this.buttonColors()[0]}></Circle>
-              <Circle size={20} fill={this.buttonColors()[1]}></Circle>
-              <Circle size={20} fill={this.buttonColors()[2]}></Circle>
+              <Circle size={20} fill={() => this.buttonColors()[0]}></Circle>
+              <Circle size={20} fill={() => this.buttonColors()[1]}></Circle>
+              <Circle size={20} fill={() => this.buttonColors()[2]}></Circle>
             </Rect>
           ) : null}
           {this.windowStyle == WindowStyle.Windows98 ? (
             <Rect>
-              <Windows98Button borderSize={2}>
+              <Windows98Button
+                borderSize={2}
+                lightColor={this.buttonLightColor}
+                darkColor={this.buttonDarkColor}
+                fill={() => this.buttonColors()[0]}
+              >
                 <Icon
                   size={24}
-                  color="black"
+                  color={() => this.buttonIconColors()[0]}
                   icon={'material-symbols:minimize'}
                 />
               </Windows98Button>
-              <Windows98Button borderSize={2} marginRight={10}>
+              <Windows98Button
+                borderSize={2}
+                marginRight={10}
+                lightColor={this.buttonLightColor}
+                darkColor={this.buttonDarkColor}
+                fill={() => this.buttonColors()[1]}
+              >
                 <Icon
                   size={24}
-                  color="black"
+                  color={() => this.buttonIconColors()[1]}
                   icon={'material-symbols:chrome-maximize-outline-sharp'}
                 />
               </Windows98Button>
-              <Windows98Button borderSize={2}>
-                <Icon size={24} color="black" icon={'material-symbols:close'} />
+              <Windows98Button
+                borderSize={2}
+                lightColor={this.buttonLightColor}
+                darkColor={this.buttonDarkColor}
+                fill={() => this.buttonColors()[2]}
+              >
+                <Icon
+                  size={24}
+                  color={() => this.buttonIconColors()[2]}
+                  icon={'material-symbols:close'}
+                />
               </Windows98Button>
             </Rect>
           ) : null}
