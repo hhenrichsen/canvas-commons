@@ -248,6 +248,10 @@ export class Scrollable extends Rect {
         ></Rect>
       </Layout>,
     );
+    this.scrollOffset(
+      props.scrollOffset ??
+        (() => this.contentsSize().mul(-0.5).add(this.size().mul(0.5))),
+    );
   }
 
   public *tweenZoom(
