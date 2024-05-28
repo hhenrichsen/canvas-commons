@@ -1,4 +1,4 @@
-import {Colors} from '../Colors';
+import {Colors} from '@Colors';
 import {
   Icon,
   Layout,
@@ -107,9 +107,10 @@ export class FileTree extends Rect {
       };
     }
     return (
-      <Layout layout direction={'column'}>
+      <Layout layout direction={'column'} grow={1}>
         <Rect
           layout
+          width={'100%'}
           direction={'row'}
           alignItems={'center'}
           padding={() => this.rowSize() * 0.1}
