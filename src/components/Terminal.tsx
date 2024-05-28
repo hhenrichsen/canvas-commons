@@ -13,6 +13,7 @@ import {
 import {
   SignalValue,
   SimpleSignal,
+  TimingFunction,
   createSignal,
   unwrap,
 } from '@motion-canvas/core';
@@ -105,7 +106,11 @@ export class Terminal extends Layout {
     this.lines([...this.lines(), !line ? [] : this.makeProps(line)]);
   }
 
-  public *typeLine(line: string | TxtProps, duration: number) {
+  public *typeLine(
+    line: string | TxtProps,
+    duration: number,
+    timingFunction?: TimingFunction,
+  ) {
     this.cachedLines([...this.cachedLines(), ...this.getLines()]);
     const l = createSignal('');
     const t = typeof line == 'string' ? line : line.text;
@@ -129,11 +134,15 @@ export class Terminal extends Layout {
       },
     ];
     this.lines([...this.lines(), props]);
-    yield* l(l() + t, duration);
+    yield* l(l() + t, duration, timingFunction);
     this.lines([...this.lines().slice(0, -1), fixedProps]);
   }
 
-  public *typeAfterLine(line: string | TxtProps, duration: number) {
+  public *typeAfterLine(
+    line: string | TxtProps,
+    duration: number,
+    timingFunction?: TimingFunction,
+  ) {
     this.cachedLines(this.cachedLines().slice(0, -1));
     const t = typeof line == 'string' ? line : line.text;
     const l = createSignal('');
@@ -154,7 +163,7 @@ export class Terminal extends Layout {
     };
     lastLine.push(props);
     this.lines([...this.lines().slice(0, -1), lastLine]);
-    yield* l(t, duration);
+    yield* l(t, duration, timingFunction);
     lastLine.pop();
     lastLine.push(fixedProps);
     this.lines([...this.lines().slice(0, -1), lastLine]);
