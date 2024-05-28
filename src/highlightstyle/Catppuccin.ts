@@ -2,7 +2,7 @@ import {Colors} from '@Colors';
 import {HighlightStyle} from '@codemirror/language';
 import {tags as t} from '@lezer/highlight';
 
-export const CatppuccinMochHighlightStyle: HighlightStyle =
+export const CatppuccinMochaHighlightStyle: HighlightStyle =
   HighlightStyle.define([
     {tag: t.keyword, color: Colors.Catppuccin.Mocha.Mauve},
     {tag: t.operator, color: Colors.Catppuccin.Mocha.Sky},

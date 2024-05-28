@@ -16,7 +16,7 @@ import {Colors} from '@Colors';
 import {DistortedCurve} from '@components/DistortedCurve';
 import {drawIn} from '@Util';
 import {parser as javascript} from '@lezer/javascript';
-import {CatppuccinMochHighlightStyle} from '@highlightstyle/Catppuccin';
+import {CatppuccinMochaHighlightStyle} from '@highlightstyle/Catppuccin';
 import {CodeLineNumbers} from '@components/CodeLineNumbers';
 import {Terminal} from '@components/Terminal';
 
@@ -34,7 +34,7 @@ export default makeScene2D(function* (view) {
       <Code
         ref={code}
         highlighter={
-          new LezerHighlighter(javascript, CatppuccinMochHighlightStyle)
+          new LezerHighlighter(javascript, CatppuccinMochaHighlightStyle)
         }
         code={`\
 const btn = document.getElementById('btn');
