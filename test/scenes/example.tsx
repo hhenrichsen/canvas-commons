@@ -212,24 +212,30 @@ class Cat {
   yield* win().close(view, 1);
 
   const terminal = createRef<Terminal>();
+  const terminalWindow = createRef<Window>();
   yield view.add(
-    <Terminal
-      ref={terminal}
+    <Window
+      ref={terminalWindow}
+      title={'Terminal'}
       size={[1200, 800]}
       headerColor={Colors.Catppuccin.Mocha.Base}
       bodyColor={Colors.Catppuccin.Mocha.Mantle}
-      fontFamily={'Ellograph CF'}
-      fontSize={32}
       buttonColors={[
         Colors.Catppuccin.Mocha.Red,
         Colors.Catppuccin.Mocha.Yellow,
         Colors.Catppuccin.Mocha.Green,
       ]}
-      title={'Terminal'}
-    />,
+    >
+      <Terminal
+        ref={terminal}
+        defaultTxtProps={{fontFamily: 'Ellograph CF', fontSize: 90}}
+        padding={20}
+      />
+      ,
+    </Window>,
   );
   scrollable().fill(Colors.Catppuccin.Mocha.Mantle);
-  yield* terminal().open(view, 1);
+  yield* terminalWindow().open(view, 1);
 
   yield* terminal().typeLine('npm init @motion-canvas@latest', 2);
   yield* waitFor(1);
@@ -301,5 +307,5 @@ class Cat {
   });
 
   yield* waitFor(2);
-  yield* terminal().close(view, 1);
+  yield* terminalWindow().close(view, 1);
 });

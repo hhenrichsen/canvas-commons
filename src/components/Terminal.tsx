@@ -8,6 +8,7 @@ import {
   initial,
   signal,
   Node,
+  LayoutProps,
 } from '@motion-canvas/2d';
 import {
   SignalValue,
@@ -15,14 +16,13 @@ import {
   createSignal,
   unwrap,
 } from '@motion-canvas/core';
-import {Scrollable} from './Scrollable';
-import {WindowProps, Window} from './Window';
 
-export interface TerminalProps extends WindowProps {
+export interface TerminalProps extends LayoutProps {
   prefix?: SignalValue<string | TxtProps>;
+  defaultTxtProps?: TxtProps;
 }
 
-export class Terminal extends Window {
+export class Terminal extends Layout {
   private internalCanvas: CanvasRenderingContext2D = document
     .createElement('canvas')
     .getContext('2d');
@@ -30,6 +30,14 @@ export class Terminal extends Window {
   @initial('❯ ')
   @signal()
   public declare readonly prefix: SimpleSignal<string | TxtProps>;
+
+  @initial({
+    fill: Colors.Catppuccin.Mocha.Text,
+    fontFamily: 'monospace',
+    fontSize: 40,
+  })
+  @signal()
+  public declare readonly defaultTxtProps: SimpleSignal<TxtProps>;
 
   private lines: SimpleSignal<TxtProps[][]>;
   private cachedLines: SimpleSignal<Node[]>;
@@ -40,14 +48,11 @@ export class Terminal extends Window {
       .slice(this.cachedLines().length)
       .map(fragments => {
         return (
-          <Layout direction={'row'} width={this.size().x - 40}>
+          <Layout direction={'row'} paddingLeft={20}>
             {fragments.length ? (
               fragments.map(fragment => {
                 const parentedDefaults = {
-                  fill: Colors.Catppuccin.Mocha.Text,
-                  fontWeight: this.fontWeight(),
-                  fontFamily: this.fontFamily(),
-                  fontSize: this.fontSize(),
+                  ...this.defaultTxtProps(),
                   ...fragment,
                 };
                 this.internalCanvas.font = `${unwrap(parentedDefaults.fontWeight) || 400} ${unwrap(parentedDefaults.fontSize)}px ${unwrap(parentedDefaults.fontFamily)}`;
@@ -90,13 +95,9 @@ export class Terminal extends Window {
     });
     this.cachedLines = createSignal([]);
     this.lines = createSignal([]);
-    const scrollable: Scrollable = this.scrollable();
-
-    scrollable.contents().children(() => (
-      <Layout minHeight={this.size().y - 80} direction={'column'} layout>
-        {[...this.cachedLines(), ...this.getLines()]}
-      </Layout>
-    ));
+    this.layout(true);
+    this.direction('column');
+    this.children(() => [...this.cachedLines(), ...this.getLines()]);
   }
 
   public lineAppear(line: string | TxtProps | TxtProps[]) {
