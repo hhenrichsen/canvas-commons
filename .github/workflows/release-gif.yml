@@ -1,0 +1,38 @@
+name: 'Generate Preview GIF'
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  pre-release:
+    name: 'Generate Preview GIF'
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        id: setup-node
+        with:
+          node-version: 20
+          cache: 'npm'
+      - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+      - uses: FedericoCarboni/setup-ffmpeg@v2
+        id: setup-ffmpeg
+      - run: npm ci
+      - run: npm test
+      - if: always()
+        run:
+          ffmpeg -framerate 15 -i output/project/%06d.png -vf
+          "fps=15,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+          output-big.gif
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          automatic_release_tag: 'latest'
+          prerelease: true
+          title: 'Development Build'
+          files: |
+            output-big.gif

@@ -18,7 +18,8 @@
     "eslint:fix": "eslint --fix \"**/*.ts?(x)\"",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "serve": "vite"
+    "serve": "vite",
+    "test": "vitest"
   },
   "peerDependencies": {
     "@motion-canvas/2d": "^3.15.2",
@@ -30,11 +31,11 @@
     "@motion-canvas/ffmpeg": "^1.1.1"
   },
   "devDependencies": {
+    "@lezer/javascript": "^1.4.16",
     "@motion-canvas/ui": "^3.15.2",
     "@motion-canvas/vite-plugin": "^3.15.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@lezer/javascript": "^1.4.16",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "cross-env": "^7.0.3",
@@ -43,6 +44,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
+    "puppeteer": "^22.11.0",
     "rimraf": "^5.0.5",
     "rollup": "^4.13.0",
     "rollup-plugin-dts": "^6.1.0",
@@ -50,7 +52,8 @@
     "tslib": "^2.6.2",
     "typescript": "^5.4.2",
     "vite": "^4.0.0",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite-tsconfig-paths": "^4.3.1",
+    "vitest": "^1.6.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix",
