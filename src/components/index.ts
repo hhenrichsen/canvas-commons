@@ -10,6 +10,7 @@ export * from './MotionCanvasLogo';
 export * from './Plot';
 export * from './ScatterPlot';
 export * from './Scrollable';
+export * from './Table';
 export * from './Terminal';
 export * from './Window';
 export * from './WindowsButton';
