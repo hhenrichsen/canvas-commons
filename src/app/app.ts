@@ -13,7 +13,7 @@ export interface App {
 export async function start(): Promise<App> {
   const [browser, server] = await Promise.all([
     puppeteer.launch({
-      headless: false,
+      headless: true,
       protocolTimeout: 15 * 60 * 1000,
     }),
     createServer({
