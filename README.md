@@ -11,6 +11,13 @@ on the motion canvas discord (I'm `@Hunter` on there).
 If you want to support the development of this and other libraries, feel free to
 donate on [Ko-fi](https://ko-fi.com/hhenrichsen).
 
+## Preview
+
+![](https://github.com/hhenrichsen/canvas-commons/releases/download/latest/output-big.gif)
+
+Code for this GIF can be found
+[here](https://github.com/hhenrichsen/canvas-commons/blob/main/test/src/scenes/example.tsx)
+
 ## Using this library
 
 ### From git
