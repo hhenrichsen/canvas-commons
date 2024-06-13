@@ -22,8 +22,8 @@
     "test": "vitest"
   },
   "peerDependencies": {
-    "@motion-canvas/2d": "^3.15.2",
-    "@motion-canvas/core": "^3.15.2"
+    "@motion-canvas/2d": "^3.16.0",
+    "@motion-canvas/core": "^3.16.0"
   },
   "dependencies": {
     "@codemirror/language": "^6.10.1",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@lezer/javascript": "^1.4.16",
-    "@motion-canvas/ui": "^3.15.2",
+    "@motion-canvas/ui": "^3.16.0",
     "@motion-canvas/vite-plugin": "^3.15.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
