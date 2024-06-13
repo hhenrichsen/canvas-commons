@@ -1,5 +1,9 @@
 # Canvas Commons
 
+[![npm](https://img.shields.io/npm/v/%40hhenrichsen%2Fcanvas-commons?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@hhenrichsen/canvas-commons)
+[![GitHub](https://img.shields.io/github/v/tag/hhenrichsen/canvas-commons?style=for-the-badge&logo=github&label=GitHub) ](https://github.com/hhenrichsen/canvas-commons)
+[![Static Badge](https://img.shields.io/badge/Donate-Kofi?style=for-the-badge&label=KoFi&color=%23FF5722)](https://ko-fi.com/hhenrichsen)
+
 <!-- prettier-ignore -->
 > **Warning** 
 ⚠️ This library is still under construction. Breaking changes are possible until I release version 1.0.0. Update versions with caution and only after reading the commit log. ⚠️
