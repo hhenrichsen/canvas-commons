@@ -18,6 +18,7 @@ import {
   colorSignal,
   IconProps,
   LayoutProps,
+  DesiredLength,
 } from '@motion-canvas/2d';
 import {
   Color,
@@ -25,8 +26,10 @@ import {
   PossibleColor,
   PossibleVector2,
   Reference,
+  SerializedVector2,
   SignalValue,
   SimpleSignal,
+  Vector2,
 } from '@motion-canvas/core';
 import {Scrollable} from './Scrollable';
 import {Windows98Button} from './WindowsButton';
@@ -61,6 +64,13 @@ export interface WindowProps extends LayoutProps {
 class ShortCircuitIcon extends Icon {
   public constructor(props: IconProps) {
     super(props);
+  }
+
+  protected desiredSize(): SerializedVector2<DesiredLength> {
+    if (this.icon()) {
+      return super.desiredSize();
+    }
+    return new Vector2(0, 0);
   }
 
   protected getSrc(): string {
