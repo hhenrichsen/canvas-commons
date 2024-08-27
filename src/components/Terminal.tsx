@@ -15,12 +15,14 @@ import {
   SimpleSignal,
   TimingFunction,
   createSignal,
+  linear,
   unwrap,
 } from '@motion-canvas/core';
 
 export interface TerminalProps extends LayoutProps {
   prefix?: SignalValue<string | TxtProps>;
   defaultTxtProps?: TxtProps;
+  wpm?: SignalValue<number>;
 }
 
 export class Terminal extends Layout {
@@ -40,6 +42,10 @@ export class Terminal extends Layout {
   @signal()
   public declare readonly defaultTxtProps: SimpleSignal<TxtProps>;
 
+  @initial(100)
+  @signal()
+  public declare readonly wpm: SimpleSignal<number>;
+
   private lines: SimpleSignal<TxtProps[][]>;
   private cachedLines: SimpleSignal<Node[]>;
 
@@ -49,7 +55,7 @@ export class Terminal extends Layout {
       .slice(this.cachedLines().length)
       .map(fragments => {
         return (
-          <Layout direction={'row'} paddingLeft={20}>
+          <Layout direction={'row'} paddingLeft={20} shrink={0}>
             {fragments.length ? (
               fragments.map(fragment => {
                 const parentedDefaults = {
@@ -65,7 +71,7 @@ export class Terminal extends Layout {
                     if (spaceOrText == ' ') {
                       return (
                         <Rect
-                          width={spc.width}
+                          minWidth={spc.width}
                           height={
                             spc.fontBoundingBoxAscent +
                             spc.fontBoundingBoxDescent
@@ -140,11 +146,12 @@ export class Terminal extends Layout {
 
   public *typeAfterLine(
     line: string | TxtProps,
-    duration: number,
-    timingFunction?: TimingFunction,
+    duration?: number,
+    timingFunction: TimingFunction = linear,
   ) {
     this.cachedLines(this.cachedLines().slice(0, -1));
     const t = typeof line == 'string' ? line : line.text;
+    const calcDuration = duration ?? (t.length / (this.wpm() * 5)) * 60;
     const l = createSignal('');
     const lastLine = this.lines()[this.lines().length - 1];
 
@@ -163,7 +170,7 @@ export class Terminal extends Layout {
     };
     lastLine.push(props);
     this.lines([...this.lines().slice(0, -1), lastLine]);
-    yield* l(t, duration, timingFunction);
+    yield* l(t, calcDuration, timingFunction);
     lastLine.pop();
     lastLine.push(fixedProps);
     this.lines([...this.lines().slice(0, -1), lastLine]);
