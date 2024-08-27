@@ -15,8 +15,12 @@ import {
   View2D,
   signal,
   withDefaults,
+  colorSignal,
+  IconProps,
 } from '@motion-canvas/2d';
 import {
+  Color,
+  ColorSignal,
   PossibleColor,
   PossibleVector2,
   Reference,
@@ -34,6 +38,8 @@ export enum WindowStyle {
 
 export interface WindowProps extends ScrollableProps {
   title?: SignalValue<string>;
+  icon?: SignalValue<string>;
+  iconColor?: SignalValue<Color>;
   titleProps?: TxtProps;
   headerColor?: SignalValue<PossibleCanvasStyle>;
   bodyColor?: SignalValue<PossibleCanvasStyle>;
@@ -50,10 +56,33 @@ export interface WindowProps extends ScrollableProps {
   buttonDarkColor?: SignalValue<PossibleCanvasStyle>;
 }
 
+/**
+ * Like an Icon, but doesn't explode if the icon is null or empty.
+ */
+class ShortCircuitIcon extends Icon {
+  public constructor(props: IconProps) {
+    super(props);
+  }
+
+  protected getSrc(): string {
+    if (this.icon()) {
+      return super.getSrc();
+    }
+    return null;
+  }
+}
+
 @nodeName('Window')
 export class Window extends Rect {
   @signal()
   public declare readonly title: SimpleSignal<string, this>;
+
+  @signal()
+  public declare readonly icon: SimpleSignal<string, this>;
+
+  @initial(Colors.Tailwind.Slate['50'])
+  @colorSignal()
+  public declare readonly iconColor: ColorSignal<this>;
 
   @signal()
   public declare readonly titleProps: SimpleSignal<TxtProps, this>;
@@ -186,7 +215,12 @@ export class Window extends Rect {
           shadowColor={Colors.Tailwind.Slate['950']}
           shadowOffset={2}
         >
-          <Rect>
+          <Rect layout direction={'row'} alignItems={'center'} gap={4}>
+            <ShortCircuitIcon
+              icon={this.icon}
+              color={this.iconColor}
+              size={30}
+            />
             <Txt
               fill={Colors.Tailwind.Slate['50']}
               fontSize={30}

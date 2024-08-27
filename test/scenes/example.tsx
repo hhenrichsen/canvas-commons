@@ -229,6 +229,7 @@ class Cat {
         Colors.Catppuccin.Mocha.Yellow,
         Colors.Catppuccin.Mocha.Green,
       ]}
+      icon={'ph:terminal'}
     >
       <Terminal
         ref={terminal}
