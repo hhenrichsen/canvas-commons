@@ -23,7 +23,6 @@ export const ImgWindow = (
     <Window
       windowStyle={WindowStyle.Windows98}
       title={props.title}
-      inactiveOpacity={0}
       shadowColor={Colors.Tailwind.Slate['950'] + '80'}
       shadowOffset={20}
       ref={props.ref}

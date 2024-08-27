@@ -35,7 +35,6 @@ export const ErrorBox = (
       {...props}
       windowStyle={WindowStyle.Windows98}
       bodyColor={Colors.Tailwind.Slate['400']}
-      inactiveOpacity={0}
       size={() => sz().addY(50)}
     >
       <>
