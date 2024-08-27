@@ -17,6 +17,7 @@ import {
   withDefaults,
   colorSignal,
   IconProps,
+  LayoutProps,
 } from '@motion-canvas/2d';
 import {
   Color,
@@ -26,9 +27,8 @@ import {
   Reference,
   SignalValue,
   SimpleSignal,
-  createRef,
 } from '@motion-canvas/core';
-import {ScrollableProps, Scrollable} from './Scrollable';
+import {Scrollable} from './Scrollable';
 import {Windows98Button} from './WindowsButton';
 
 export enum WindowStyle {
@@ -36,7 +36,7 @@ export enum WindowStyle {
   Windows98,
 }
 
-export interface WindowProps extends ScrollableProps {
+export interface WindowProps extends LayoutProps {
   title?: SignalValue<string>;
   icon?: SignalValue<string>;
   iconColor?: SignalValue<Color>;
@@ -44,7 +44,6 @@ export interface WindowProps extends ScrollableProps {
   headerColor?: SignalValue<PossibleCanvasStyle>;
   bodyColor?: SignalValue<PossibleCanvasStyle>;
   windowStyle?: WindowStyle;
-  scrollable?: Reference<Scrollable>;
   scrollOffset?: SignalValue<PossibleVector2>;
   buttonColors?: SignalValue<
     [PossibleCanvasStyle, PossibleCanvasStyle, PossibleCanvasStyle]
@@ -127,7 +126,6 @@ export class Window extends Rect {
       ...props,
     });
     this.windowStyle = props.windowStyle ?? WindowStyle.MacOS;
-    this.scrollable = props.scrollable ?? createRef<Scrollable>();
     if (!props.buttonColors) {
       this.buttonColors(
         this.windowStyle == WindowStyle.MacOS
@@ -176,31 +174,7 @@ export class Window extends Rect {
         stroke={this.windowStyle == WindowStyle.MacOS ? undefined : this.stroke}
         lineWidth={2}
       >
-        <Scrollable
-          activeOpacity={props.activeOpacity}
-          handleInset={props.handleInset}
-          handleProps={props.handleProps}
-          handleWidth={props.handleWidth}
-          inactiveOpacity={props.inactiveOpacity}
-          ref={this.scrollable}
-          scrollHandleDelay={props.scrollHandleDelay}
-          scrollHandleDuration={props.scrollHandleDuration}
-          scrollOffset={props.scrollOffset}
-          scrollPadding={props.scrollPadding}
-          fill={this.bodyColor}
-          zoom={props.zoom}
-          size={() =>
-            this.size()
-              .addY(-50)
-              .add(
-                this.windowStyle == WindowStyle.Windows98
-                  ? {x: -16, y: -16}
-                  : {x: 0, y: 0},
-              )
-          }
-        >
-          {props.children}
-        </Scrollable>
+        {props.children}
         <Rect
           layout
           justifyContent={'space-between'}

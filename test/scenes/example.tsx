@@ -97,84 +97,80 @@ class Cat {
   const spl = createRef<Spline>();
   const win = createRef<Window>();
   view.add(
-    <Window
-      ref={win}
-      windowStyle={WindowStyle.Windows98}
-      scrollable={scrollable}
-      size={[500, 550]}
-      scrollPadding={8}
-    >
-      <Rect ref={r} size={600} radius={5}></Rect>
-      <DistortedCurve
-        curve={r}
-        samples={100}
-        count={2}
-        displacement={5}
-        lineProps={{
-          stroke: new Gradient({
-            stops: [
-              {
-                color: Colors.Tailwind.Amber['600'],
-                offset: 0,
-              },
-              {
-                color: Colors.Tailwind.Amber['200'],
-                offset: 1,
-              },
-            ],
-            type: 'linear',
-            from: [0, -600],
-            to: [0, 600],
-          }),
-          fill: new Gradient({
-            stops: [
-              {
-                color: Colors.Tailwind.Amber['600'] + '20',
-                offset: 0,
-              },
-              {
-                color: Colors.Tailwind.Amber['200'] + '20',
-                offset: 1,
-              },
-            ],
-            type: 'linear',
-            from: [0, -600],
-            to: [0, 600],
-          }),
-          lineWidth: 2,
-        }}
-      ></DistortedCurve>
-      <Rect
-        size={[100, 100]}
-        position={[0, 500]}
-        fill={Colors.Tailwind.Amber['600']}
-        radius={5}
-      ></Rect>
-      <Rect
-        size={[100, 100]}
-        position={[0, -500]}
-        fill={Colors.Tailwind.Amber['600']}
-        radius={5}
-      ></Rect>
-      <Rect
-        size={[100, 100]}
-        position={[500, 0]}
-        fill={Colors.Tailwind.Amber['600']}
-        radius={5}
-      ></Rect>
-      <Rect
-        size={[100, 100]}
-        position={[-500, 0]}
-        fill={Colors.Tailwind.Amber['600']}
-        radius={5}
-      ></Rect>
-      <Spline ref={spl}>
-        <Knot position={[500, 0]}></Knot>
-        <Knot position={[0, 500]}></Knot>
-        <Knot position={[-500, 0]}></Knot>
-        <Knot position={[0, -500]}></Knot>
-        <Knot position={[500, 0]}></Knot>
-      </Spline>
+    <Window ref={win} windowStyle={WindowStyle.Windows98} size={[500, 550]}>
+      <Scrollable ref={scrollable} scrollPadding={8} size={484}>
+        <Rect ref={r} size={600} radius={5}></Rect>
+        <DistortedCurve
+          curve={r}
+          samples={100}
+          count={2}
+          displacement={5}
+          lineProps={{
+            stroke: new Gradient({
+              stops: [
+                {
+                  color: Colors.Tailwind.Amber['600'],
+                  offset: 0,
+                },
+                {
+                  color: Colors.Tailwind.Amber['200'],
+                  offset: 1,
+                },
+              ],
+              type: 'linear',
+              from: [0, -600],
+              to: [0, 600],
+            }),
+            fill: new Gradient({
+              stops: [
+                {
+                  color: Colors.Tailwind.Amber['600'] + '20',
+                  offset: 0,
+                },
+                {
+                  color: Colors.Tailwind.Amber['200'] + '20',
+                  offset: 1,
+                },
+              ],
+              type: 'linear',
+              from: [0, -600],
+              to: [0, 600],
+            }),
+            lineWidth: 2,
+          }}
+        ></DistortedCurve>
+        <Rect
+          size={[100, 100]}
+          position={[0, 500]}
+          fill={Colors.Tailwind.Amber['600']}
+          radius={5}
+        ></Rect>
+        <Rect
+          size={[100, 100]}
+          position={[0, -500]}
+          fill={Colors.Tailwind.Amber['600']}
+          radius={5}
+        ></Rect>
+        <Rect
+          size={[100, 100]}
+          position={[500, 0]}
+          fill={Colors.Tailwind.Amber['600']}
+          radius={5}
+        ></Rect>
+        <Rect
+          size={[100, 100]}
+          position={[-500, 0]}
+          fill={Colors.Tailwind.Amber['600']}
+          radius={5}
+        ></Rect>
+        <Spline ref={spl}>
+          <Knot position={[500, 0]}></Knot>
+          <Knot position={[0, 500]}></Knot>
+          <Knot position={[-500, 0]}></Knot>
+          <Knot position={[0, -500]}></Knot>
+          <Knot position={[500, 0]}></Knot>
+        </Spline>
+      </Scrollable>
     </Window>,
   );
   yield* win().open(view, 1);
@@ -233,7 +229,7 @@ class Cat {
     >
       <Terminal
         ref={terminal}
-        defaultTxtProps={{fontFamily: 'Ellograph CF', fontSize: 90}}
+        defaultTxtProps={{fontFamily: 'Ellograph CF', fontSize: 30}}
         padding={20}
       />
       ,
@@ -255,7 +251,7 @@ class Cat {
     {text: '»', fill: Colors.Catppuccin.Mocha.Surface2},
   ]);
   yield* waitFor(1);
-  yield* terminal().typeAfterLine(' my-animation', 1);
+  yield* terminal().typeAfterLine(' my-animation');
   yield* waitFor(1);
   terminal().replaceLine([
     {text: '√', fill: Colors.Catppuccin.Mocha.Green},
@@ -267,7 +263,7 @@ class Cat {
     {text: '? Project path '},
     {text: '»', fill: Colors.Catppuccin.Mocha.Surface2},
   ]);
-  yield* terminal().typeAfterLine(' my-animation', 1);
+  yield* terminal().typeAfterLine(' my-animation');
   yield* waitFor(1);
   terminal().replaceLine([
     {text: '√', fill: Colors.Catppuccin.Mocha.Green},
@@ -469,6 +465,8 @@ class Cat {
   yield* plot4().opacity(1, 2);
   yield* waitFor(2);
   yield* line4().end(1, 1);
+
+  yield view.add(<Window size={500}></Window>);
 
   yield* waitFor(5);
 });

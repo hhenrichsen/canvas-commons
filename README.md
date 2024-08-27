@@ -92,21 +92,16 @@ export default makeScene2D(function* (view) {
 ### Window
 
 The `Window` node is custom component designed to look like a window on either a
-MacOS system or a Windows 98 system. It is designed to be used as a container,
-and uses a `Scrollable` internally to view larger content than its size.
+MacOS system or a Windows 98 system.
 
 #### Props
 
 - `bodyColor` - the color of the body
 - `headerColor` - the color of the header
-- `scrollable` - the ref to the scrollable to use
 - `titleProps` - the props to pass to the title's `<Txt>` node
 - `title` - the title of the window
 - `windowStyle` - the style of the window, either `WindowStyle.Windows98` or
   `WindowStyle.MacOS`
-
-It also accepts any props that a `Scrollable` would accept, and passes them
-down.
 
 #### Example
 
@@ -116,30 +111,18 @@ import {makeScene2D, Rect} from '@motion-canvas/2d';
 import {createRef, waitFor} from '@motion-canvas/core';
 
 export default makeScene2D(function* (view) {
-  const scrollable = createRef<Scrollable>();
+  const window = createRef<Window>();
   const rect = createRef<Rect>();
   view.add(
     <>
-      <Window windowStyle={WindowStyle.Windows98} scrollable={scrollable}>
+      <Window windowStyle={WindowStyle.Windows98} ref={window}>
         <Rect fill={'blue'} radius={5} ref={rect} size={40}></Rect>
       </Window>
     </>,
   );
 
-  yield* scrollable().scrollTo([150, 150], 2);
-  yield* scrollable().scrollToLeft(1);
-  yield* scrollable().scrollToTop(1);
-  yield* scrollable().scrollTo(0, 1);
+  yield* window.open(view, 1);
   yield* waitFor(1);
-
-  yield rect().fill('seagreen', 1);
-  yield* rect().size(600, 2);
-  yield* waitFor(1);
-
-  yield* scrollable().scrollToBottom(1);
-  yield* scrollable().scrollToRight(1);
-  yield* scrollable().scrollBy(-100, 1);
-  yield* waitFor(5);
 });
 ```
 
