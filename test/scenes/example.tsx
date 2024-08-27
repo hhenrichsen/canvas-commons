@@ -466,7 +466,5 @@ class Cat {
   yield* waitFor(2);
   yield* line4().end(1, 1);
 
-  yield view.add(<Window size={500}></Window>);
-
   yield* waitFor(5);
 });
