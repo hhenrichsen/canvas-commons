@@ -21,10 +21,6 @@
     "serve": "vite",
     "test": "vitest"
   },
-  "peerDependencies": {
-    "@motion-canvas/2d": "^3.16.0",
-    "@motion-canvas/core": "^3.16.0"
-  },
   "dependencies": {
     "@codemirror/language": "^6.10.1",
     "@lezer/highlight": "^1.2.0",
